@@ -28,8 +28,8 @@ dwnldpth = 'C:\\Users\\xxxxx\\xxxxx\\shares\\19'
 Library_head = []
 Library_head.append("Company")
 Library_head.append("Price")
-Library_head.append("Last Dividend"
-Library_head.append("Yield)
+Library_head.append("Last Dividend")
+Library_head.append("Yield")
 Library_head.append("52 Week Low")
 Library_head.append("52 Week High")
 Library_head.append("P/E")

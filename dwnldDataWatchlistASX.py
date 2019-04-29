@@ -12,19 +12,19 @@ import win32com.client
 import csv
 import codecs
 
-tgtfile = open('C:\\Users\\Business\\Kearnvest\\shares\
+tgtfile = open('C:\\Users\\xxxxx\\xxxxx\\shares\
 \\19\\Watchlist.csv', 'r')
 try:
-    os.remove('C:\\Users\\Business\\Kearnvest\\shares\
+    os.remove('C:\\Users\\xxxxx\\xxxxx\\shares\
 \\19\\WtchlstRrdr.csv')
 except:
     pass
-rsltfl = open('C:\\Users\\Business\\Kearnvest\\shares\
+rsltfl = open('C:\\Users\\xxxxx\\xxxxx\\shares\
 \\19\\WtchlstRrdr.csv', 'w+')
 csvwriter = csv.writer(rsltfl)
  
 url ='https://www.asx.com.au/'
-dwnldpth = 'C:\\Users\Business\\Kearnvest\\shares\\19'
+dwnldpth = 'C:\\Users\\xxxxx\\xxxxx\\shares\\19'
 Library_head = []
 Library_head.append("Company")
 Library_head.append("Price")

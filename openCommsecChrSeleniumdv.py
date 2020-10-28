@@ -8,7 +8,6 @@ import requests
 import sys, getopt
 import os
 
-
 try:
     ttldt= sys.argv[1]
     lgnid = ttldt[len(ttldt)-16:len(ttldt)-8]
@@ -19,7 +18,12 @@ except:
     StDt = input("Enter Start Date - ddmmyyyy:")
 
 url ='https://www.commsec.com.au/'
-dwnldpth = 'C:\\Users\Business\\Downloads'
+
+flpth='C:\\Users\\Public\\Documents\\Reference\\'
+sep=''
+dwnldpthfl=open(sep.join([flpth,'dwnldpth.txt']), 'rt')
+dwnldpth = dwnldpthfl.read()
+dwnldpthfl.close()
 
 chromeOptions = webdriver.ChromeOptions()
 prefs = ({"download.default_directory" : dwnldpth, 
@@ -44,20 +48,13 @@ time.sleep(5)
 
 #Holdings Download
 #------------------
-
-urlshrt='https://www2.commsec.com.au/portfolio/holdings********'
-
 dwnldxpth='/html/body/portfolio-root/div/portfolio-holdings\
                     /root-page-container/div/div[5]/equity-holdings-table\
                     /div/div/div/div[1]/div[2]/download-button/with-tooltip\
                     /div/button/with-spinner/div'
 sep=""
 
-#Kearnvest Holdings Download
-urlhld = '*********8p3c39FxsJ**'
-
 def dwnldact():
-    url = sep.join([urlshrt, urlhld])
     driver.get(url)
     time.sleep(5)
     try:
@@ -66,13 +63,36 @@ def dwnldact():
     except:
         print ('Element not found')
 
-dwnldact()
+flnme = sep.join([flpth, 'commsecHoldurlDrctions.txt'])
+filehandle = open(flnme, 'r')
+commsecHoldurlDrctions=[]
+while True:
+    line = filehandle.readline()
+    line= line.rstrip('\n')
+    if not line:
+        break
+    commsecHoldurlDrctions.append(line)
 
-#Domaintell Holdings Download
-urlhld = '*****KSueoAVk85SV0xswu*****'
+urlhldngs=[]
+for x in range(0,len(commsecHoldurlDrctions)):
+    urlshrt=commsecHoldurlDrctions[0]
+    if x>0:
+        url = sep.join([urlshrt, commsecHoldurlDrctions[x]])
+        urlhldngs.append(url)
 
-dwnldact()
+flnme = sep.join([flpth, 'commsecAccts.txt'])
+filehandle = open(flnme, 'r')
+commsecAccts=[]
+while True:
+    line = filehandle.readline()
+    line= line.rstrip('\n')
+    if not line:
+        break
+    commsecAccts.append(line)
 
+for n in range(0,len(commsecAccts)):
+    url = urlhldngs[n]
+    dwnldact()
 
 #Acquisitions Stage
 #------------------
@@ -86,47 +106,28 @@ _Underlying_TopPagerRow_btnDownloadCSV_implementation'
 driver.get(url)
 time.sleep(5)
 
-#Kearnvest Share Acquisition confirmations ConfirmationsDetails.csv
-driver.find_element_by_id(prtflacc).send_keys ("2")
-driver.find_element_by_id(ordrprd).clear()
-driver.find_element_by_id(ordrprd).send_keys (StDt)
-driver.find_element_by_id(srch).click()
-time.sleep(5)
-#Line 62
-
-try:
-    driver.find_element_by_id(csvdwnld).click()
+for n in range(0, len(commsecAccts)):
+    acct = commsecAccts[n]
+    acctnn = acct[0]
+    driver.find_element_by_id(prtflacc).send_keys (acctnn)
+    driver.find_element_by_id(ordrprd).clear()
+    driver.find_element_by_id(ordrprd).send_keys (StDt)
+    driver.find_element_by_id(srch).click()
     time.sleep(5)
-except:
-    print ('No confirmations apply')
 
-try:
-    dwnldfletmp=os.path.join(dwnldpth, "ConfirmationDetails.csv")
-    dwnldfle =os.path.join(dwnldpth, "ConfirmationDetails2*.csv")
-    os.rename(dwnldfletmp, dwnldfle) 
-except:
-    print ('File does not exists')
-
-#Domaintell Share Acquisition confirmations ConfirmationsDetails (1).csv
-driver.find_element_by_id(prtflacc).send_keys ("3")
-driver.find_element_by_id(ordrprd).clear()
-driver.find_element_by_id(ordrprd).send_keys (StDt)
-driver.find_element_by_id(srch).click()
-time.sleep(5)
-
-try:
-    driver.find_element_by_id(csvdwnld).click()
-    time.sleep(5)
-except:
-    print ('No confirmations apply')
-
-try:
-    dwnldfletmp=os.path.join(dwnldpth, "ConfirmationDetails.csv")
-    dwnldfle =os.path.join(dwnldpth, "ConfirmationDetails3*.csv")
-    print (dwnldfle)
-    os.rename(dwnldfletmp, dwnldfle) 
-except:
-    print ('File does not exists')
+    try:
+        driver.find_element_by_id(csvdwnld).click()
+        time.sleep(5)
+    except:
+        print ('No confirmations apply')
+    
+    acctnn = acct[0:2]
+    try:
+        dwnldfletmp=os.path.join(dwnldpth, "ConfirmationDetails.csv")
+        dwnldfle =os.path.join(dwnldpth, sep.join(["ConfirmationDetails", acctnn, ".csv"]))
+        os.rename(dwnldfletmp, dwnldfle) 
+    except:
+        print ('File does not exists')
 
 url='https://www2.commsec.com.au/'
 driver.get(url)
